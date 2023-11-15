@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Project</title>
+    <style>
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  /*   text-align: center; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Fheroism.fandom.com%2Fwiki%2FGru%2527s_House&psig=AOvVaw04IfQ6a2SixFK3s5hvnYTt&ust=1699132147179000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMiWgtPeqIIDFQAAAAAdAAAAABAD);
+}
+div#calculator {
+  width: 60%;
+  background-color: yellow;
+  height: 80%;
+  margin: auto;
+}
+div.button-area {
+  height: 60%;
+  background-color: blue;
+  border: 1px solid black;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+div#buttons1 {
+  width: 60%;
+  float: left;
+}
+button.number-buttons {
+  height: 20%;
+  flex: 0 0 30%;
+}
+input#display {
+  height: 32%;
+  width: 80%;
+  text-align: right;
+  align-items: center;
+  justify-content: center;
+  padding-right: 2%;
+  margin-left: 10%;
+  margin-top: 10%;
+  padding-bottom: 10px;
+  background-color: rgba(255, 247, 27, 1);
+}
+#equal {
+  height: 20%;
+  flex: 0 0 60%;
+  margin-right: 8px;
+  /*   margin: 1px; */
+  order: 10;
+  background-color: grey;
+  color: white;
+}
+.operator {
+  height: 15%;
+  width: 10%;
+  flex: 0 0 80%;
+  /*   margin-left: 25px; */
+  border-radius: 10px;
+}
+div#buttons2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.number-button {
+  height: 20%;
+  flex: 1 0 30%;
+  margin: 1px;
+  border-radius: 10px;
+}
+img {
+  width: 10px;
+  height: 10px;
+}
+
+    </style>
+</head>
+
+<body>
+    <div id="calculator">
+  <input id="display" maxLength="10" disabled>
+  <div class="button-area" id="buttons1">
+
+    <button class="operator" id="equal">=</button>
+
+  </div>
+  <div class="button-area" id="buttons2">
+    <button class="operator" id="clear">clear</button>
+
+    <button class="operator" data-value="+" id="plus">+</button>
+    <button class="operator" data-value="-" id="minus">-</button>
+    <button class="operator" data-value="*" id="multiplication">*</button>
+    <button class="operator" data-value="/" id="division">/</button>
+  </div>
+</div>
+    <script>const calculator = document.getElementById("calculator");
+const resultDisplay = document.getElementById("display");
+const buttons1 = document.getElementById("buttons1");
+const clearButton = document.getElementById("clear");
+const equalButton = document.getElementById("equal");
+const addButton = document.getElementById("add");
+const minusButton = document.getElementById("subtract");
+const divideButton = document.getElementById("divide");
+const multiplyButton = document.getElementById("multiply");
+
+let maxLength = resultDisplay.maxLength;
+let tempNumber = null;
+let firstNumber = null;
+let secondNumber = null;
+let operation = null;
+let result = null;
+
+for (let i = 0; i < 10; i++) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.classList.add("number-button");
+  button.classList.add("input-button");
+  button.textContent = i;
+  button.setAttribute("data-value", i);
+  if (i === 0) {
+    button.style.order = 1;
+  }
+  buttons1.appendChild(button);
+}
+
+const numberButtons = document.querySelectorAll(".number-button");
+
+numberButtons.forEach((button) => {
+  let dataValue = parseInt(button.getAttribute("data-value"));
+  button.addEventListener("click", function (event) {
+    if (resultDisplay.value.length < maxLength) {
+      if (operation === null) {
+        if (firstNumber === null || firstNumber === 0) {
+          firstNumber = dataValue;
+        } else {
+          firstNumber = parseInt(firstNumber.toString().concat(dataValue));
+        }
+        resultDisplay.value = firstNumber.toString();
+      } else {
+        if (secondNumber === null || secondNumber === 0) {
+          secondNumber = dataValue;
+        } else {
+          secondNumber = parseInt(secondNumber.toString().concat(dataValue));
+        }
+        resultDisplay.value = secondNumber.toString();
+      }
+    }
+  });
+});
+
+function clearValues() {
+  tempNumber = null;
+  firstNumber = null;
+  secondNumber = null;
+  operation = null;
+  result = null;
+  resultDisplay.value = 0;
+}
+
+clearButton.addEventListener("click", function () {
+  clearValues();
+});
+
+const operatorButtons = document.querySelectorAll(".operator");
+
+operatorButtons.forEach((button) => {
+  // console.log(button);
+  button.addEventListener("click", function (event) {
+    // console.log(event);
+    const thisOperation = event.target.id;
+    console.log(thisOperation);
+    if (firstNumber !== null && secondNumber === null) {
+      switch (thisOperation) {
+        case "plus":
+          operation = "+";
+          break;
+        case "minus":
+          operation = "-";
+          break;
+        case "multiplication":
+          operation = "*";
+          break;
+        case "division":
+          operation = "/";
+          break;
+      }
+      resultDisplay.value = operation;
+    }
+  });
+});
+
+equalButton.addEventListener("click", function (event) {
+  if (secondNumber !== null) {
+    switch (operation) {
+      case "+":
+        result = firstNumber + secondNumber;
+        break;
+      case "-":
+        result = firstNumber - secondNumber;
+        break;
+      case "*":
+        result = firstNumber * secondNumber;
+        break;
+      case "/":
+        result = firstNumber / secondNumber;
+        break;
+    }
+    resultDisplay.value = result;
+  }
+});
+</script>
+</body>
+
+
+</html>
